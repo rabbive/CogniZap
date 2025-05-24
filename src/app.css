@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for CogniZap */
+@layer base {
+  body {
+    @apply min-h-screen bg-base-100 text-base-content;
+  }
+}
+
+@layer components {
+  .card-flashcard {
+    @apply card card-compact bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300;
+  }
+  
+  .btn-primary-gradient {
+    @apply btn btn-primary bg-gradient-to-r from-primary to-secondary hover:from-primary-focus hover:to-secondary-focus;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+} 

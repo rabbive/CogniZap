@@ -1,0 +1,106 @@
+{
+  "language": "typescript",
+  "framework": "sveltekit",
+  "context": [
+    "https://svelte.dev/docs",
+    "https://kit.svelte.dev/docs",
+    "https://tailwindcss.com/docs",
+    "https://www.typescriptlang.org/docs/",
+    "https://docs.perplexity.ai/docs/initial-setup"
+  ],
+  "api": {
+    "svelte": {
+      "docs": "https://svelte.dev/content.json",
+      "refresh": "daily"
+    },
+    "sveltekit": {
+      "docs": "https://kit.svelte.dev/docs",
+      "refresh": "daily"
+    },
+    "perplexity": {
+      "docs": "https://docs.perplexity.ai/docs/initial-setup",
+      "endpoint": "https://api.perplexity.ai/chat/completions",
+      "models": ["sonar-pro", "sonar-small", "sonar-medium"],
+      "auth": "Bearer PERPLEXITY_API_KEY"
+    },
+    "typescript": {
+      "strict": true
+    }
+  },
+  "includePatterns": [
+    "src/**/*.{ts,js,svelte}",
+    "*.config.{ts,js}",
+    ".env*"
+  ],
+  "excludePatterns": [
+    "node_modules/**",
+    ".svelte-kit/**",
+    "build/**",
+    "static/**"
+  ],
+  "rules": {
+    "svelte5_events": {
+      "pattern": "on:(click|keydown|input|change|submit)",
+      "message": "Use 'onclick', 'onkeydown', etc. in Svelte 5 instead of 'on:' event syntax",
+      "replacement": {
+        "on:click": "onclick",
+        "on:keydown": "onkeydown",
+        "on:input": "oninput",
+        "on:change": "onchange",
+        "on:submit": "onsubmit"
+      }
+    },
+    "svelte5_reactivity": {
+      "pattern": "\\$:",
+      "message": "Use '$derived' or '$effect' in Svelte 5 instead of '$:' reactive statements",
+      "replacement": {
+        "\\$:": "$derived"
+      }
+    },
+    "tailwind_classes": {
+      "pattern": "class=\"[^\"]*\"",
+      "message": "Use Tailwind CSS utility classes for styling (e.g., 'bg-primary text-primary-foreground')",
+      "suggestion": "Refer to https://tailwindcss.com/docs for utility classes"
+    },
+    "perplexity_api_call": {
+      "pattern": "fetch\\(.*api.perplexity.ai.*\\)",
+      "message": "Ensure Perplexity Sonar API calls include Authorization header and handle rate limits",
+      "suggestion": "Use fetch with headers: { 'Authorization': 'Bearer $PERPLEXITY_API_KEY', 'Content-Type': 'application/json' } and implement exponential backoff for rate limits"
+    },
+    "pdfjs_import": {
+      "pattern": "pdfjs-dist",
+      "message": "Use 'pdfjs-dist' for PDF text extraction in server routes",
+      "suggestion": "Import pdfjs-dist in +server.ts for PDF processing"
+    },
+    "ppt_parser": {
+      "pattern": "pptx-parser",
+      "message": "Use 'pptx-parser' for PowerPoint text extraction in server routes",
+      "suggestion": "Import pptx-parser in +server.ts for PPT processing"
+    },
+    "sveltekit_server_routes": {
+      "pattern": "\\+server\\.(ts|js)",
+      "message": "Use RequestHandler type for SvelteKit server routes and return JSON responses",
+      "suggestion": "Define route as: export const POST: RequestHandler = async ({ request }) => { ... }"
+    },
+    "sveltekit_form_actions": {
+      "pattern": "action=\"\\?/[a-zA-Z]+\"",
+      "message": "Use SvelteKit form actions for server-side form handling",
+      "suggestion": "Define actions in +page.server.ts and use formaction in Svelte components"
+    },
+    "store_usage": {
+      "pattern": "writable\\(|readable\\(",
+      "message": "Use Svelte writable/readable stores for state management (e.g., currentCard, quizScore)",
+      "suggestion": "Import { writable } from 'svelte/store' and define stores in $lib/stores"
+    },
+    "typescript_strict": {
+      "pattern": ": any",
+      "message": "Avoid 'any' type; use specific TypeScript types for better type safety",
+      "suggestion": "Use interfaces or types (e.g., interface Flashcard { question: string; answer: string })"
+    },
+    "error_handling": {
+      "pattern": "fetch\\(",
+      "message": "Implement try-catch for fetch calls and user-friendly error messages",
+      "suggestion": "Wrap fetch in try-catch and return { error: 'Message' } for API failures"
+    }
+  }
+}
