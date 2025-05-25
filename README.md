@@ -1,248 +1,407 @@
-# ⚡ CogniZap - Enhanced AI Learning Platform
+# CogniZap 🧠⚡
 
-An advanced AI-powered web application that transforms any topic into interactive flashcards and quizzes using the Perplexity Sonar API. Built with cutting-edge features for real-time learning, fact-checking, and trending content discovery.
+An AI-powered educational platform that generates flashcards and quizzes using real-time information from the Perplexity Sonar API. CogniZap transforms current events, trending topics, and live data into engaging learning experiences.
 
-## 🚀 Enhanced Features
+## 🌟 Features
 
-### 🔥 **Real-Time & Current Events**
-- **📊 Trending Topics Discovery**: Live trending topics across technology, science, business, and more
-- **📰 News-Based Learning**: Generate educational content from current events and breaking news
-- **⏰ Content Freshness Control**: Choose between latest (this week), recent (this month), or any timeframe
-- **🔄 Auto-Refresh**: Real-time updates for trending topics and content validation
+### Core Features
+- **Smart Content Generation**: Create flashcards and quizzes from any topic
+- **File Upload Support**: Extract content from PDFs and PowerPoint presentations
+- **Real-Time Integration**: Leverage Perplexity Sonar API for current information
+- **Fact-Checking**: Verify content accuracy with source citations
+- **Trending Topics**: Stay updated with current events and viral content
 
-### ✅ **Smart Fact-Checking & Verification**
-- **🔍 Automated Fact-Checking**: Cross-reference information against multiple reliable sources
-- **📊 Confidence Scoring**: AI-powered confidence ratings for all generated content (0-100%)
-- **📚 Source Citations**: Automatic inclusion of reliable source links with reliability scores
-- **⚠️ Dispute Detection**: Flag potentially disputed or uncertain information
+### 🚀 Advanced Features
 
-### 🎯 **Adaptive & Personalized Learning**
-- **👥 Target Audience Customization**: Content tailored for students, professionals, or researchers
-- **📈 Trending Score Integration**: Prioritize content based on current relevance and popularity
-- **🔗 Related Topics Discovery**: Explore interconnected subjects and trending connections
-- **📱 Enhanced UI/UX**: Modern, responsive design with interactive trending topics sidebar
+#### 1. Smart Research Assistant
+Multi-perspective analysis with real-time synthesis and debate points.
 
-### 🌍 **Multi-Modal Content Sources**
-- **📄 Enhanced File Processing**: Advanced PDF and PowerPoint text extraction
-- **🌐 Web-Based Research**: Real-time web search integration for up-to-date information
-- **📊 Live Data Integration**: Support for real-time data from various APIs (stocks, weather, sports)
-- **🔄 Content Validation**: Automatic verification against current information
+**Endpoint**: `/api/research-assistant`
 
-## 🛠️ Tech Stack
+**Features**:
+- Academic, industry, news, and social perspectives
+- Real-time synthesis of multiple viewpoints
+- Debate point analysis with evidence
+- Bias detection and credibility assessment
+- Cross-source verification
 
-- **Framework**: SvelteKit 5 with TypeScript and Runes
+**Example Usage**:
+```javascript
+const response = await fetch('/api/research-assistant', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    topic: 'Artificial Intelligence in Healthcare',
+    perspectives: ['academic', 'industry', 'news'],
+    timeframe: 'week',
+    depth: 'detailed',
+    includeDebate: true
+  })
+});
+```
+
+#### 2. Live Market & Data Learning
+Real-time educational content from stocks, crypto, weather, sports, and economic data.
+
+**Endpoint**: `/api/live-data-learning`
+
+**Features**:
+- Real-time market data integration
+- Educational explanations of data trends
+- Predictive analysis and forecasting
+- Cross-market comparisons
+- Auto-updating content with freshness tracking
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/live-data-learning', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    dataType: 'stocks',
+    symbols: ['AAPL', 'GOOGL', 'TSLA'],
+    analysisType: 'trends',
+    contentType: 'flashcards',
+    count: 5,
+    difficulty: 'medium'
+  })
+});
+```
+
+#### 3. Skill Demand Intelligence
+Job market analysis with real-time skill demand and salary insights.
+
+**Endpoint**: `/api/skill-demand`
+
+**Features**:
+- Current job market analysis
+- Emerging vs. declining skills tracking
+- Salary impact assessments
+- Learning path recommendations
+- Industry-specific insights
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/skill-demand', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    industry: 'Technology',
+    role: 'Software Engineer',
+    location: 'United States',
+    timeframe: 'current',
+    analysisType: 'skills',
+    contentType: 'quiz',
+    count: 5,
+    difficulty: 'medium'
+  })
+});
+```
+
+#### 4. Global Event Learning
+Comprehensive geopolitical analysis and current events education.
+
+**Endpoint**: `/api/global-events`
+
+**Features**:
+- Real-time global event tracking
+- Geopolitical context and analysis
+- Historical parallels and lessons
+- Multi-regional perspectives
+- Impact assessment and predictions
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/global-events', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    eventType: 'political',
+    region: 'Global',
+    timeframe: 'week',
+    significance: 'major',
+    contentType: 'flashcards',
+    count: 5,
+    difficulty: 'medium',
+    includeAnalysis: true
+  })
+});
+```
+
+#### 5. Scientific Breakthrough Tracker
+Latest research discoveries and scientific developments monitoring.
+
+**Endpoint**: `/api/science-tracker`
+
+**Features**:
+- Real-time research publication tracking
+- Peer review status and reproducibility assessment
+- Future implications analysis
+- Researcher and institution profiles
+- Funding trends and research momentum
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/science-tracker', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    field: 'ai',
+    timeframe: 'week',
+    significance: 'breakthrough',
+    contentType: 'quiz',
+    count: 5,
+    difficulty: 'hard',
+    includeImplications: true
+  })
+});
+```
+
+#### 6. Real-Time Learning Competitions
+Competitive learning experiences with live updates and gamification.
+
+**Endpoint**: `/api/learning-competitions`
+
+**Features**:
+- Multiple competition types (daily challenges, trending quizzes, breaking news)
+- Real-time leaderboards and updates
+- Adaptive difficulty and time pressure
+- Reward systems and achievements
+- Social learning elements
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/learning-competitions', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    competitionType: 'trending-quiz',
+    topic: 'Technology',
+    difficulty: 'mixed',
+    duration: 15,
+    participantCount: 10,
+    realTimeData: true
+  })
+});
+```
+
+#### 7. Viral Content Analysis
+Educational insights from trending social media content and viral phenomena.
+
+**Endpoint**: `/api/viral-analysis`
+
+**Features**:
+- Cross-platform viral content tracking
+- Educational value assessment
+- Fact-checking and misinformation detection
+- Virality factor analysis
+- Trend prediction and pattern recognition
+
+**Example Usage**:
+```javascript
+const response = await fetch('/api/viral-analysis', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    platform: 'all',
+    contentType: 'educational',
+    timeframe: 'week',
+    viralityThreshold: 'viral',
+    analysisDepth: 'detailed',
+    generateContent: 'both',
+    count: 5,
+    difficulty: 'medium'
+  })
+});
+```
+
+## 🛠️ Technology Stack
+
+- **Frontend**: SvelteKit 5 with TypeScript
 - **Styling**: Tailwind CSS + DaisyUI
-- **State Management**: Enhanced Svelte stores with real-time updates
-- **AI API**: Perplexity Sonar API (sonar-pro model)
-- **File Processing**: PDF.js, pptx-parser with enhanced extraction
-- **Deployment**: Vercel-ready with optimized builds
+- **AI Integration**: Perplexity Sonar API
+- **File Processing**: PDF.js, PPTX Parser
+- **State Management**: Svelte Stores
+- **Deployment**: Vercel
 
-## 📦 Installation
+## 🚀 Getting Started
 
-1. **Clone and install dependencies**:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or pnpm
+- Perplexity API key
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-git clone <repository-url>
-cd CogniZap
+git clone https://github.com/yourusername/cognizap.git
+cd cognizap
+```
+
+2. **Install dependencies**
+```bash
 npm install
 ```
 
-2. **Set up environment variables**:
-Create a `.env` file in the root directory:
+3. **Set up environment variables**
 ```bash
-PERPLEXITY_API_KEY=your_perplexity_api_key_here
+cp .env.example .env
 ```
 
-Get your API key from [Perplexity AI Docs](https://docs.perplexity.ai/docs/initial-setup)
+Add your Perplexity API key to `.env`:
+```env
+PERPLEXITY_API_KEY=your_api_key_here
+```
 
-3. **Start the development server**:
+4. **Start the development server**
 ```bash
 npm run dev
 ```
 
-Visit `http://localhost:5173` to see the enhanced application.
+5. **Open your browser**
+Navigate to `http://localhost:5173`
 
-## 🎯 Usage Guide
+## 🧪 Testing
 
-### 🔥 **Trending Topics**
-1. Check the trending topics sidebar for current hot topics
-2. Click any trending topic to auto-populate the main form
-3. Topics are automatically updated every 5 minutes
-4. Filter by category (technology, science, business, etc.)
-
-### ⚡ **Enhanced Generation**
-1. Enter a topic or select from trending topics
-2. Toggle "Advanced Options" to access enhanced features:
-   - **📈 Current Events**: Include trending information
-   - **✅ Fact Checking**: Verify information accuracy
-   - **📚 Source Citations**: Include reliable source links
-   - **👥 Target Audience**: Customize for your level
-   - **⏰ Content Freshness**: Control information recency
-
-### 📰 **News-Based Learning**
-1. Click "Use Today's News" in the sidebar
-2. Select category and content type
-3. Generate educational content from current events
-4. View source articles and reliability scores
-
-### 📊 **Enhanced Results**
-- View confidence scores for each flashcard/quiz question
-- Check fact-verification status (✅ verified, ⚠️ disputed, 🔄 pending)
-- Access source citations with reliability ratings
-- Explore related trending topics
-- See content freshness timestamps
-
-## 🏗️ Enhanced Project Structure
-
-```
-src/
-├── lib/
-│   ├── components/
-│   │   ├── ui/                     # Base UI components
-│   │   ├── TrendingTopics.svelte   # Real-time trending topics widget
-│   │   ├── EnhancedFlashcard.svelte # Enhanced flashcard with sources
-│   │   └── NewsLearning.svelte     # News-based content component
-│   ├── stores/
-│   │   ├── enhancedStore.ts        # Enhanced features state management
-│   │   ├── flashcardStore.ts       # Flashcard state
-│   │   └── quizStore.ts           # Quiz state
-│   └── types.ts                   # Enhanced TypeScript interfaces
-├── routes/
-│   ├── api/
-│   │   ├── generate/+server.ts    # Enhanced AI content generation
-│   │   ├── trending/+server.ts    # Trending topics API
-│   │   ├── news-learning/+server.ts # News-based learning API
-│   │   └── upload/+server.ts      # Enhanced file upload
-│   ├── results/+page.svelte       # Enhanced results display
-│   ├── +layout.svelte             # App layout with enhanced features
-│   └── +page.svelte               # Main form with trending sidebar
-└── app.css                        # Enhanced global styles
-```
-
-## 🔧 Enhanced API Routes
-
-### POST `/api/generate` (Enhanced)
-Generates flashcards or quiz content with advanced features.
-
-**Enhanced Request**:
-```json
-{
-  "topic": "Machine Learning trends in 2024",
-  "type": "flashcards",
-  "count": 10,
-  "difficulty": "medium",
-  "includeCurrentEvents": true,
-  "factCheck": true,
-  "includeSources": true,
-  "targetAudience": "professional",
-  "contentFreshness": "latest"
-}
-```
-
-**Enhanced Response**:
-```json
-{
-  "success": true,
-  "data": [...],
-  "sources": [...],
-  "trendingnessScore": 85,
-  "factCheckResults": [...],
-  "relatedTopics": [...],
-  "lastUpdated": "2024-01-15T10:00:00Z",
-  "contentFreshness": "latest"
-}
-```
-
-### GET `/api/trending`
-Fetches current trending topics with sources and relevance scores.
-
-**Parameters**:
-- `category`: technology, science, business, etc.
-- `limit`: number of topics to return
-
-### GET `/api/news-learning`
-Generates educational content from current news.
-
-**Parameters**:
-- `category`: news category
-- `type`: flashcards or quiz
-- `count`: number of items
-- `timeframe`: today, this_week, etc.
-
-## 🧪 Testing Enhanced Features
-
-Run the comprehensive test suite:
-
+### Run Basic Tests
 ```bash
-# Test all enhanced features
-node test-enhanced-features.js
-
-# Test basic functionality
-node test-api.js
-
-# Test file upload
-node test-upload.js
+npm run test:api
 ```
 
-## 🚀 Deployment
-
-The project is configured for Vercel deployment with enhanced features:
-
-1. **Deploy to Vercel**:
+### Run Enhanced Features Tests
 ```bash
-npm run build
+npm run test:enhanced
 ```
 
-2. **Set environment variables** in Vercel dashboard:
-   - `PERPLEXITY_API_KEY`
+### Run Advanced Features Tests
+```bash
+node test-advanced-features.js
+```
 
-3. **Deploy**: Push to your Git repository connected to Vercel
+### Test Individual APIs
+```bash
+# Test research assistant
+curl -X POST http://localhost:5173/api/research-assistant \
+  -H "Content-Type: application/json" \
+  -d '{"topic":"AI Ethics","perspectives":["academic","industry"],"timeframe":"week","depth":"detailed"}'
 
-## 🎨 Enhanced Svelte 5 Features
+# Test live data learning
+curl -X POST http://localhost:5173/api/live-data-learning \
+  -H "Content-Type: application/json" \
+  -d '{"dataType":"crypto","analysisType":"trends","contentType":"flashcards","count":3,"difficulty":"medium"}'
+```
 
-- **Modern Runes Syntax**: `$state`, `$derived`, `$props()` for reactive programming
-- **Enhanced Event Handling**: `onclick`, `onkeydown` instead of legacy `on:` syntax
-- **TypeScript Integration**: Full type safety with enhanced interfaces
-- **Real-time Stores**: Reactive state management with auto-persistence
-- **Component Composition**: Reusable enhanced UI components
+## 📚 API Documentation
 
-## 🔮 Advanced Features
+### Core APIs
 
-### 📊 **Learning Analytics**
-- Track topic popularity and learning progress
-- Benchmark understanding against current expert consensus
-- Personalized recommendations based on trending topics
+#### Generate Content
+- **POST** `/api/generate`
+- Generate flashcards or quizzes from topics or uploaded files
+- Supports fact-checking, current events, and source citations
 
-### 🌐 **Multi-Source Integration**
-- Cross-reference multiple reliable sources
-- Real-time fact verification
-- Source reliability scoring and ranking
+#### Trending Topics
+- **POST** `/api/trending`
+- Get current trending topics with real-time data
+- Supports category filtering and relevance scoring
 
-### 🎯 **Smart Recommendations**
-- AI-powered related topic suggestions
-- Trending skill recommendations for career development
-- Conference and event preparation materials
+#### News-Based Learning
+- **POST** `/api/news-learning`
+- Generate educational content from current news events
+- Includes source verification and bias detection
 
-### 🔄 **Auto-Update System**
-- Scheduled content freshness validation
-- Automatic outdated content flagging
-- Version tracking for evolving topics
+### Advanced APIs
+
+All advanced APIs support:
+- Real-time data integration
+- Source citation and fact-checking
+- Configurable difficulty levels
+- Multiple content formats
+- Comprehensive analytics
+
+See individual API sections above for detailed usage examples.
+
+## 🎯 Use Cases
+
+### Educational Institutions
+- **Current Events Curriculum**: Keep course content updated with real-time information
+- **Research Projects**: Multi-perspective analysis for comprehensive understanding
+- **Competitive Learning**: Gamified experiences to boost engagement
+
+### Professional Development
+- **Skill Assessment**: Track market demand for specific skills
+- **Career Planning**: Data-driven insights for career decisions
+- **Industry Updates**: Stay current with field developments
+
+### Content Creators
+- **Trend Analysis**: Understand viral content patterns
+- **Educational Content**: Transform trending topics into learning materials
+- **Fact-Checking**: Verify information accuracy with multiple sources
+
+### Researchers & Analysts
+- **Market Intelligence**: Real-time data analysis and insights
+- **Global Events Monitoring**: Comprehensive geopolitical analysis
+- **Scientific Tracking**: Latest research and breakthrough monitoring
+
+## 🔧 Configuration
+
+### Environment Variables
+```env
+# Required
+PERPLEXITY_API_KEY=your_perplexity_api_key
+
+# Optional
+NODE_ENV=development
+PUBLIC_APP_NAME=CogniZap
+PUBLIC_APP_VERSION=2.0.0
+```
+
+### API Rate Limits
+- Perplexity Sonar API: Respects rate limits with exponential backoff
+- File uploads: Max 10MB per file
+- Concurrent requests: Limited to prevent API abuse
+
+### Content Freshness
+- Trending topics: Updated every 5 minutes
+- Market data: Updated every 5-30 minutes depending on data type
+- News content: Updated every 15 minutes
+- Scientific content: Updated daily
 
 ## 🤝 Contributing
 
-This enhanced version includes cutting-edge features for modern learning. Contributions welcome!
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### 🚀 **Feature Roadmap**
-- [ ] WebSocket real-time updates
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support
-- [ ] Voice-to-text input
-- [ ] AR/VR learning modes
-- [ ] Collaborative study sessions
+### Development Guidelines
+- Follow TypeScript best practices
+- Use Svelte 5 runes mode syntax
+- Implement proper error handling
+- Add comprehensive tests
+- Update documentation
 
 ## 📄 License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Perplexity AI](https://perplexity.ai) for the Sonar API
+- [SvelteKit](https://kit.svelte.dev) for the amazing framework
+- [Tailwind CSS](https://tailwindcss.com) for styling
+- [DaisyUI](https://daisyui.com) for UI components
+
+## 📞 Support
+
+- 📧 Email: support@cognizap.com
+- 💬 Discord: [Join our community](https://discord.gg/cognizap)
+- 📖 Documentation: [docs.cognizap.com](https://docs.cognizap.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/cognizap/issues)
 
 ---
 
-**🌟 Enhanced with Perplexity Sonar API for real-time, fact-checked, and trending educational content!**
+**CogniZap** - Transforming real-time information into engaging learning experiences! 🧠⚡
