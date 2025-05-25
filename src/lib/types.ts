@@ -5,6 +5,13 @@ export interface Flashcard {
   difficulty: 'easy' | 'medium' | 'hard';
   topic?: string;
   createdAt: Date;
+  // Enhanced features
+  sources?: Source[];
+  lastUpdated?: Date;
+  trendingnessScore?: number;
+  relatedCurrentTopics?: string[];
+  factCheckStatus?: 'verified' | 'pending' | 'disputed';
+  confidenceScore?: number; // 0-100
 }
 
 export interface Quiz {
@@ -15,6 +22,12 @@ export interface Quiz {
   topic?: string;
   timeLimit?: number; // in minutes
   createdAt: Date;
+  // Enhanced features
+  sources?: Source[];
+  lastUpdated?: Date;
+  trendingnessScore?: number;
+  isCurrentEvents?: boolean;
+  expertiseLevel?: 'beginner' | 'intermediate' | 'expert';
 }
 
 export interface QuizQuestion {
@@ -23,6 +36,11 @@ export interface QuizQuestion {
   options: string[];
   correctAnswer: number; // index of correct option
   explanation?: string;
+  // Enhanced features
+  sources?: Source[];
+  factCheckStatus?: 'verified' | 'pending' | 'disputed';
+  confidenceScore?: number;
+  relatedTopics?: string[];
 }
 
 export interface QuizResult {
@@ -89,4 +107,86 @@ export interface PerplexityResponse {
     completion_tokens: number;
     total_tokens: number;
   };
+}
+
+// New enhanced types
+export interface Source {
+  url: string;
+  title: string;
+  publishedDate: Date;
+  reliability: number; // 0-100
+  domain: string;
+  snippet?: string;
+}
+
+export interface StudyPreferences {
+  includeCurrentEvents: boolean;
+  sourceRecency: 'day' | 'week' | 'month' | 'any';
+  expertiseLevel: 'beginner' | 'intermediate' | 'expert';
+  industryFocus: string[];
+  factCheckLevel: 'basic' | 'thorough' | 'academic';
+  autoRefresh: boolean;
+  trendingnessThreshold: number; // 0-100
+}
+
+export interface TrendingTopic {
+  topic: string;
+  score: number;
+  category: string;
+  relatedKeywords: string[];
+  lastUpdated: Date;
+  sources: Source[];
+}
+
+export interface NewsBasedContent {
+  id: string;
+  headline: string;
+  summary: string;
+  category: 'technology' | 'science' | 'politics' | 'business' | 'health' | 'education';
+  publishedDate: Date;
+  sources: Source[];
+  generatedContent: Flashcard[] | Quiz;
+}
+
+export interface EnhancedGenerateRequest extends GenerateRequest {
+  preferences?: StudyPreferences;
+  includeCurrentEvents?: boolean;
+  factCheck?: boolean;
+  includeSources?: boolean;
+  targetAudience?: 'student' | 'professional' | 'researcher';
+  contentFreshness?: 'latest' | 'recent' | 'any';
+}
+
+export interface EnhancedGenerateResponse extends GenerateResponse {
+  sources?: Source[];
+  trendingnessScore?: number;
+  factCheckResults?: FactCheckResult[];
+  relatedTopics?: string[];
+  lastUpdated?: Date;
+  contentFreshness?: string;
+}
+
+export interface FactCheckResult {
+  claim: string;
+  status: 'verified' | 'disputed' | 'unverified';
+  confidence: number;
+  sources: Source[];
+  explanation: string;
+}
+
+export interface LiveDataIntegration {
+  type: 'stock' | 'weather' | 'sports' | 'news' | 'research';
+  apiEndpoint: string;
+  lastFetched: Date;
+  data: any;
+  reliability: number;
+}
+
+export interface LearningAnalytics {
+  userId?: string;
+  topicPopularity: { [topic: string]: number };
+  learningProgress: { [topic: string]: number };
+  trendsFollowed: string[];
+  factCheckAccuracy: number;
+  lastActive: Date;
 } 
