@@ -5,21 +5,18 @@
   import Icon from "$lib/components/ui/Icons.svelte";
   import { onMount } from "svelte";
 
-  interface $$Props {
-    class?: string;
-  }
+  let className = "";
 
-  let className: string = "";
-  export { className as class };
-
-  let isDark = false;
-  let isMenuOpen = false;
-  let searchQuery = "";
-  let notifications = [
+  let isDark = $state(false);
+  let isMenuOpen = $state(false);
+  let searchQuery = $state("");
+  let notifications = $state([
     { id: 1, title: "New trending topic available", time: "2m ago", unread: true },
     { id: 2, title: "Quiz completed successfully", time: "1h ago", unread: false },
     { id: 3, title: "Weekly learning report ready", time: "3h ago", unread: true }
-  ];
+  ]);
+
+  const unreadCount = $derived(notifications.filter(n => n.unread).length);
 
   onMount(() => {
     // Check for saved theme preference or default to light mode
@@ -51,20 +48,24 @@
     }
   }
 
-  $: unreadCount = notifications.filter(n => n.unread).length;
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }
 </script>
 
 <header class={cn("sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
   <div class="container flex h-16 items-center justify-between px-4">
     <!-- Logo and Brand -->
     <div class="flex items-center space-x-4">
-      <Button variant="ghost" size="icon" class="md:hidden" on:click={() => isMenuOpen = !isMenuOpen}>
+      <Button variant="ghost" size="icon" class="md:hidden" onclick={() => isMenuOpen = !isMenuOpen}>
         <Icon name="menu" size={20} />
       </Button>
       
       <a href="/" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
         <div class="flex items-center justify-center w-8 h-8 bg-primary rounded-lg">
-          <Icon name="zap" size={20} className="text-primary-foreground" />
+          <Icon name="zap" size={20} class="text-primary-foreground" />
         </div>
         <span class="font-bold text-xl bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
           CogniZap
@@ -96,7 +97,7 @@
           type="text"
           placeholder="Search topics, flashcards..."
           bind:value={searchQuery}
-          on:keydown={(e) => e.key === 'Enter' && handleSearch()}
+          onkeydown={handleKeydown}
           class="w-full pl-10 pr-4 py-2 text-sm bg-muted/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
         />
       </div>
@@ -122,7 +123,7 @@
       </div>
 
       <!-- Theme Toggle -->
-      <Button variant="ghost" size="icon" on:click={toggleTheme}>
+      <Button variant="ghost" size="icon" onclick={toggleTheme}>
         {#if isDark}
           <Icon name="sun" size={20} />
         {:else}
@@ -167,7 +168,7 @@
               type="text"
               placeholder="Search topics, flashcards..."
               bind:value={searchQuery}
-              on:keydown={(e) => e.key === 'Enter' && handleSearch()}
+              onkeydown={handleKeydown}
               class="w-full pl-10 pr-4 py-2 text-sm bg-muted/50 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>

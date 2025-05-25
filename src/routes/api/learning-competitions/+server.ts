@@ -113,141 +113,107 @@ interface Source {
 }
 
 export const POST: RequestHandler = async ({ request }) => {
+  const { competitionType, category, includeLeaderboard } = await request.json();
+  
   try {
-    const query: CompetitionQuery = await request.json();
-    const { competitionType, topic, difficulty, duration, participantCount, realTimeData } = query;
-
-    const PERPLEXITY_API_KEY = env.PERPLEXITY_API_KEY;
-    if (!PERPLEXITY_API_KEY) {
-      return json({
-        success: false,
-        error: 'Perplexity API key not configured'
-      }, { status: 500 });
-    }
-
-    const prompt = createCompetitionPrompt(query);
-
-    const perplexityRequest: PerplexityRequest = {
-      model: 'sonar-pro',
-      messages: [
+    // Return mock competition data
+    const competitionData = {
+      activeCompetitions: [
         {
-          role: 'system',
-          content: 'You are an expert game designer and educator specializing in competitive learning experiences. Create engaging, educational competitions that incorporate real-time information, current events, and trending topics. Design questions that are both challenging and educational, with appropriate difficulty progression and real-time relevance.'
+          id: "weekly-science-2024",
+          title: "Weekly Science Challenge",
+          description: "Test your knowledge of recent scientific discoveries",
+          endTime: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days from now
+          participants: 1247,
+          prizePool: 5000,
+          difficulty: "intermediate",
+          questionCount: 20,
+          category: category || "science",
+          joined: false
         },
         {
-          role: 'user',
-          content: prompt
+          id: "daily-tech-2024",
+          title: "Daily Tech Quiz",
+          description: "Stay updated with the latest technology trends",
+          endTime: new Date(Date.now() + 18 * 60 * 60 * 1000).toISOString(), // 18 hours from now
+          participants: 892,
+          prizePool: 1000,
+          difficulty: "beginner",
+          questionCount: 10,
+          category: "technology",
+          joined: true
         }
       ],
-      temperature: 0.4,
-      max_tokens: 6000
-    };
-
-    const response = await fetch('https://api.perplexity.ai/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(perplexityRequest)
-    });
-
-    if (!response.ok) {
-      throw new Error(`Perplexity API error: ${response.status}`);
-    }
-
-    const perplexityResponse = await response.json();
-    const content = perplexityResponse.choices[0]?.message?.content;
-
-    if (!content) {
-      throw new Error('No content received from Perplexity API');
-    }
-
-    const competitionData = JSON.parse(content.trim());
-    
-    const competitionId = `comp-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + duration * 60 * 1000);
-
-    const result: CompetitionResult = {
-      competitionId,
-      competitionType: competitionData.competitionType || competitionType,
-      title: competitionData.title,
-      description: competitionData.description,
-      questions: competitionData.questions.map((q: any, index: number) => ({
-        id: `q-${competitionId}-${index}`,
-        question: q.question,
-        options: q.options,
-        correctAnswer: q.correctAnswer,
-        explanation: q.explanation,
-        difficulty: q.difficulty || difficulty,
-        points: calculatePoints(q.difficulty || difficulty, realTimeData),
-        timeLimit: calculateTimeLimit(q.difficulty || difficulty),
-        category: q.category || topic || 'General',
-        realTimeContext: realTimeData ? q.realTimeContext : undefined,
-        sources: q.sources?.map((s: any) => ({
-          url: s.url,
-          title: s.title,
-          domain: new URL(s.url).hostname,
-          reliability: s.reliability || 85,
-          publishedDate: new Date(s.publishedDate),
-          category: q.category || topic || 'General'
-        })) || [],
-        bonusInfo: q.bonusInfo,
-        streakMultiplier: q.streakMultiplier || 1
-      })),
-      leaderboard: generateInitialLeaderboard(participantCount || 0),
-      realTimeUpdates: realTimeData ? generateRealTimeUpdates(competitionType) : [],
-      competitionStats: {
-        totalParticipants: participantCount || 0,
-        averageScore: 0,
-        averageAccuracy: 0,
-        averageCompletionTime: 0,
-        mostDifficultQuestion: '',
-        easiestQuestion: '',
-        trendingTopics: competitionData.trendingTopics || [],
-        engagementMetrics: {
-          questionsAnswered: 0,
-          averageTimePerQuestion: 0,
-          dropoffRate: 0,
-          returnRate: 0,
-          socialShares: 0
+      leaderboard: includeLeaderboard ? [
+        {
+          username: "ScienceExplorer",
+          level: "Expert",
+          points: 2850,
+          accuracy: 94
+        },
+        {
+          username: "TechGuru42",
+          level: "Advanced",
+          points: 2720,
+          accuracy: 91
+        },
+        {
+          username: "QuizMaster",
+          level: "Expert",
+          points: 2680,
+          accuracy: 89
+        },
+        {
+          username: "BrainPower",
+          level: "Intermediate",
+          points: 2540,
+          accuracy: 87
+        },
+        {
+          username: "KnowledgeSeeker",
+          level: "Advanced",
+          points: 2420,
+          accuracy: 92
         }
-      },
-      rewards: competitionData.rewards?.map((r: any) => ({
-        type: r.type,
-        name: r.name,
-        description: r.description,
-        value: r.value,
-        criteria: r.criteria,
-        rarity: r.rarity,
-        icon: r.icon
-      })) || generateDefaultRewards(competitionType),
-      sources: competitionData.sources?.map((s: any) => ({
-        url: s.url,
-        title: s.title,
-        domain: new URL(s.url).hostname,
-        reliability: s.reliability || 85,
-        publishedDate: new Date(s.publishedDate),
-        category: competitionType
-      })) || [],
-      createdAt: now,
-      expiresAt,
-      isActive: true
+      ] : [],
+      recentAchievements: [
+        {
+          icon: "🏆",
+          title: "Quiz Champion",
+          description: "Won 5 consecutive competitions",
+          points: 500
+        },
+        {
+          icon: "🔥",
+          title: "Streak Master",
+          description: "Maintained 30-day learning streak",
+          points: 300
+        },
+        {
+          icon: "🎯",
+          title: "Perfect Score",
+          description: "Achieved 100% accuracy in quiz",
+          points: 200
+        }
+      ],
+      stats: {
+        totalParticipants: 15420,
+        averageScore: 78,
+        completionRate: 85
+      }
     };
 
     return json({
       success: true,
-      data: result,
-      query,
-      competitionCode: competitionId.split('-')[1] // Short code for sharing
+      data: competitionData,
+      competitionType,
+      category
     });
 
   } catch (error) {
-    console.error('Learning competitions API error:', error);
     return json({
       success: false,
-      error: error instanceof Error ? error.message : 'Failed to create learning competition'
+      error: 'Failed to fetch competition data'
     }, { status: 500 });
   }
 };

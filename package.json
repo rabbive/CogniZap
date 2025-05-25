@@ -30,6 +30,7 @@
 	"dependencies": {
 		"@sveltejs/adapter-vercel": "^5.7.2",
 		"clsx": "^2.1.1",
+		"lucide-svelte": "^0.511.0",
 		"pdfjs-dist": "^3.11.174",
 		"pptx-parser": "^1.1.7-beta.9",
 		"tailwind-merge": "^3.3.0",

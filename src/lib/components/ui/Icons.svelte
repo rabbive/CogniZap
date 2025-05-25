@@ -1,57 +1,212 @@
 <script lang="ts">
-  export let name: string;
-  export let size: number = 24;
-  export let className: string = "";
+  interface Props {
+    name: string;
+    size?: number;
+    class?: string;
+    className?: string;
+  }
+
+  let {
+    name,
+    size = 24,
+    class: classNameProp = '',
+    className = ''
+  }: Props = $props();
+
+  const finalClassName = classNameProp || className;
 
   const icons: Record<string, string> = {
-    brain: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>`,
+    // Basic icons
+    'arrow-right': 'M5 12h14m-7-7l7 7-7 7',
+    'arrow-left': 'M19 12H5m7-7l-7 7 7 7',
+    'check': 'M20 6L9 17l-5-5',
+    'x': 'M18 6L6 18M6 6l12 12',
+    'plus': 'M12 5v14m-7-7h14',
+    'minus': 'M5 12h14',
+    'search': 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+    'refresh': 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
+    'refresh-cw': 'M3 3v5h5M3 8a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 3v5h-5M21 21v-5h-5M21 16a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 21v-5h5',
+    'upload': 'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12',
+    'download': 'M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3',
+    'edit': 'M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z',
+    'trash': 'M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2',
+    'copy': 'M20 9H11a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-9a2 2 0 00-2-2zM5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1',
+    'external-link': 'M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3',
+    'link': 'M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71',
+    'eye': 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 100 6 3 3 0 000-6z',
+    'eye-off': 'M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19M14.12 14.12a3 3 0 11-4.24-4.24M1 1l22 22',
+    'settings': 'M12 15a3 3 0 100-6 3 3 0 000 6zM19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z',
+    'menu': 'M3 12h18M3 6h18M3 18h18',
+    'more-horizontal': 'M12 12h.01M19 12h.01M5 12h.01',
+    'more-vertical': 'M12 12h.01M12 5h.01M12 19h.01',
+    'info': 'M12 16v-4M12 8h.01',
+    'alert-circle': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 8v4M12 16h.01',
+    'alert-triangle': 'M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01',
+    'help-circle': 'M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z',
+    'clock': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 6v6l4 2',
+    'calendar': 'M3 9h18M7 3v4M17 3v4M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
     
-    sparkles: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 12 2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>`,
+    // Navigation icons
+    'home': 'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z',
+    'user': 'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z',
+    'users': 'M17 21v-2a4 4 0 00-3-3.87M9 21v-2a4 4 0 013-3.87M13 7a4 4 0 11-8 0 4 4 0 018 0zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75',
+    'mail': 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6',
+    'phone': 'M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z',
+    'map-pin': 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0zM12 13a3 3 0 100-6 3 3 0 000 6z',
     
-    upload: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5-5 5 5m-5-5v12"/>`,
+    // Content icons
+    'book': 'M4 19.5A2.5 2.5 0 016.5 17H20',
+    'book-open': 'M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z',
+    'bookmark': 'M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z',
+    'file': 'M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9zM13 2v7h7',
+    'file-text': 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8',
+    'image': 'M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2zM8.5 10a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM21 15l-5-5L5 21',
+    'video': 'M23 7l-7 5 7 5V7zM1 5h12a2 2 0 012 2v8a2 2 0 01-2 2H1a2 2 0 01-2-2V7a2 2 0 012-2z',
+    'music': 'M9 18V5l12-2v13M9 9l12-2',
+    'headphones': 'M3 18v-6a9 9 0 0118 0v6M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z',
     
-    trending: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m3 17 6-6 4 4 8-8m-5-3h5v5"/>`,
+    // Technology icons
+    'cpu': 'M4 16v-2.38C4 11.5 2.97 10.5 3 8.5A4.77 4.77 0 017.5 4c.38-.09.74-.4 1.13-.4h6.74c.39 0 .75.31 1.13.4A4.77 4.77 0 0121 8.5c.03 2-.03 3-.03 5.12V16M9 7h6M9 11h6M9 15h6',
+    'smartphone': 'M17 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2zM12 18h.01',
+    'laptop': 'M20 16V7a2 2 0 00-2-2H6a2 2 0 00-2 2v9M4 20h16',
+    'monitor': 'M8 21h8M12 17v4M4 3h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2z',
+    'wifi': 'M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0M12 20h.01',
+    'bluetooth': 'M6.5 6.5l11 11L12 23l-5.5-5.5 11-11L12 1l5.5 5.5-11 11',
+    'battery': 'M1 6v6h2M5 6v6h2M9 6v6h2M13 6v6h2M17 6v6h2M21 6v6h2',
+    'zap': 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
+    'flash': 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
     
-    search: `<circle cx="11" cy="11" r="8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35"/>`,
+    // Business icons
+    'briefcase': 'M16 20V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v16M8 7h8M22 7H2v10a2 2 0 002 2h16a2 2 0 002-2V7z',
+    'building': 'M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9v.01M9 12v.01M9 15v.01M9 18v.01M13 9v.01M13 12v.01M13 15v.01M13 18v.01',
+    'dollar-sign': 'M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6',
+    'credit-card': 'M21 4H3a2 2 0 00-2 2v12a2 2 0 002 2h18a2 2 0 002-2V6a2 2 0 00-2-2zM1 10h22',
+    'shopping-cart': 'M9 22a1 1 0 100-2 1 1 0 000 2zM20 22a1 1 0 100-2 1 1 0 000 2zM1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6',
+    'trending-up': 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6',
+    'trending-down': 'M23 18l-9.5-9.5-5 5L1 6M17 18h6v-6',
+    'bar-chart': 'M12 20V10M18 20V4M6 20v-6',
+    'pie-chart': 'M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z',
+    'activity': 'M22 12h-4l-3 9L9 3l-3 9H2',
     
-    bell: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M13.73 21a2 2 0 0 1-3.46 0"/>`,
+    // Science icons
+    'atom': 'M12 12h.01M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10zM2 12h20',
+    'flask': 'M9 3h6M10 9v6.5a3.5 3.5 0 11-7 0V9M14 9v6.5a3.5 3.5 0 107 0V9M8 3v6M16 3v6',
+    'microscope': 'M6 18h8M3 22h18M14 22a7 7 0 100-14h-1M9 7h2a4 4 0 014 4v1a2 2 0 002 2 2 2 0 012 2v1a2 2 0 01-2 2M9 11V9a2 2 0 012-2h2M9 11h2a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v1a2 2 0 01-2 2',
+    'beaker': 'M9 3h6M10 9v6.5a3.5 3.5 0 11-7 0V9M14 9v6.5a3.5 3.5 0 107 0V9M8 3v6M16 3v6',
+    'dna': 'M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6',
     
-    user: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>`,
+    // Nature icons
+    'leaf': 'M11 20A7 7 0 019.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z',
+    'tree': 'M12 22V8M5 12l7-7 7 7M10 9l2-2 2 2',
+    'sun': 'M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 8a4 4 0 100 8 4 4 0 000-8z',
+    'moon': 'M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z',
+    'cloud': 'M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z',
+    'umbrella': 'M23 12a11.05 11.05 0 00-22 0zm-5 7a3 3 0 01-6 0v-7',
+    'droplet': 'M12 2.69l5.66 5.66a8 8 0 11-11.31 0z',
     
-    moon: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`,
+    // Transportation icons
+    'car': 'M7 17m-2 0a2 2 0 104 0 2 2 0 10-4 0M17 17m-2 0a2 2 0 104 0 2 2 0 10-4 0M5 17H3v-6l2-5h9l4 5v6h-2',
+    'truck': 'M1 3h15v13H1zM16 8h4l3 3v5h-7V8zM5.5 21a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM18.5 21a2.5 2.5 0 100-5 2.5 2.5 0 000 5z',
+    'plane': 'M21 16v-2l-8-5V3.5a1.5 1.5 0 00-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z',
+    'ship': 'M2 20l1.5-1.5L6 17l1.5 1.5L10 17l1.5 1.5L14 17l1.5 1.5L18 17l1.5 1.5L22 20M6 17V9h12v8M8 9V6a2 2 0 012-2h4a2 2 0 012 2v3',
+    'rocket': 'M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z',
     
-    sun: `<circle cx="12" cy="12" r="5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Social icons
+    'heart': 'M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z',
+    'star': 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
+    'thumbs-up': 'M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3',
+    'thumbs-down': 'M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3zM17 2h3a2 2 0 012 2v7a2 2 0 01-2 2h-3',
+    'message-circle': 'M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z',
+    'share': 'M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13',
     
-    menu: `<line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Media icons
+    'play': 'M8 5v14l11-7z',
+    'pause': 'M6 4h4v16H6zM14 4h4v16h-4z',
+    'stop': 'M5 4h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1z',
+    'skip-back': 'M19 20L9 12l10-8v16zM5 19V5',
+    'skip-forward': 'M5 4l10 8-10 8V4zM19 5v14',
+    'volume': 'M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07',
+    'volume-off': 'M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6',
     
-    x: `<line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Weather icons
+    'cloud-rain': 'M20 16.58A5 5 0 0018 7h-1.26A8 8 0 104 15.25M8 19v2M8 13v2M16 19v2M16 13v2',
+    'cloud-snow': 'M20 17.58A5 5 0 0018 8h-1.26A8 8 0 104 16.25M8 16l.01.01M8 20l.01.01M12 18l.01.01M12 22l.01.01M16 16l.01.01M16 20l.01.01',
+    'wind': 'M17.7 7.7a2.5 2.5 0 111.8 4.3H2M9.6 4.6A2 2 0 1111 8H2M14.6 20.6A2 2 0 1016 17H2',
+    'thermometer': 'M14 4v10.54a4 4 0 11-4 0V4a2 2 0 014 0z',
     
-    chevronDown: `<polyline points="6,9 12,15 18,9" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Special icons
+    'sparkles': 'M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962L8.5 9.936A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.962 0L14.063 8.5A2 2 0 0015.5 9.937l6.135 1.582a.5.5 0 010 .962L15.5 14.063a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.962 0L9.937 15.5z',
+    'award': 'M12 15a3 3 0 100-6 3 3 0 000 6zM8 21l4-7 4 7',
+    'trophy': 'M6 9H4.5a2.5 2.5 0 010-5H6M18 9h1.5a2.5 2.5 0 000-5H18M12 12h.01M6 20h12M12 17v3M8 21l4-7 4 7',
+    'gift': 'M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z',
+    'target': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM12 18a6 6 0 100-12 6 6 0 000 12zM12 14a2 2 0 100-4 2 2 0 000 4z',
+    'crosshair': 'M23 12h-4M5 12H1M12 5V1M12 23v-4M20 20l-3-3M7 7L4 4M7 17l-3 3M20 4l-3 3',
+    'compass': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM8 16l2-6 6-2-2 6-6 2z',
+    'map': 'M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4zM8 2v16M16 6v16',
     
-    chevronRight: `<polyline points="9,18 15,12 9,6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Education icons
+    'graduation-cap': 'M22 10v6M6 12l-3-2 9-5 9 5-3 2M6 12l3 2v7l-3-2v-7zM18 14v7l-3 2v-7l3-2z',
+    'school': 'M14 22v-4a2 2 0 00-4 0v4M18 10l4 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8l4-2M2 7l10-5 10 5-10 5z',
+    'library': 'M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2M8 6v16M16 6v16M4 6h16M4 10h16M4 14h16M4 18h16',
+    'pencil': 'M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z',
+    'pen-tool': 'M12 19l7-7 3 3-7 7-3-3zM18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586M11 11l4.707 4.707',
+    'ruler': 'M10 21v-7L3 7.5a7.5 7.5 0 0115 0L11 14v7',
+    'calculator': 'M9 7h6M9 11h6M9 15h6M9 19h6M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z',
     
-    check: `<polyline points="20,6 9,17 4,12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Communication icons
+    'message-square': 'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z',
+    'mail-open': 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
+    'send': 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z',
+    'inbox': 'M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z',
+    'at-sign': 'M12 16a4 4 0 100-8 4 4 0 000 8zM16 8v5a3 3 0 006 0v-1a10 10 0 10-3.92 7.94',
     
-    plus: `<line x1="12" y1="5" x2="12" y2="19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="5" y1="12" x2="19" y2="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Status icons
+    'check-circle': 'M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3',
+    'x-circle': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM15 9l-6 6M9 9l6 6',
+    'alert-octagon': 'M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86L7.86 2zM12 8v4M12 16h.01',
+    'shield': 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z',
+    'shield-check': 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4',
+    'lock': 'M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zM7 11V7a5 5 0 0110 0v4',
+    'unlock': 'M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zM7 11V7a5 5 0 019.9-.8',
+    'key': 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4',
     
-    settings: `<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>`,
+    // Layout icons
+    'layout': 'M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z',
+    'grid': 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z',
+    'columns': 'M12 3h7a2 2 0 012 2v14a2 2 0 01-2 2h-7m0-18H5a2 2 0 00-2 2v14a2 2 0 002 2h7m0-18v18',
+    'sidebar': 'M16 3h5a2 2 0 012 2v14a2 2 0 01-2 2h-5M3 3h5a2 2 0 012 2v14a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 012-2z',
+    'maximize': 'M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3',
+    'minimize': 'M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3',
     
-    activity: `<polyline points="22,12 18,12 15,21 9,3 6,12 2,12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
+    // Arrows and directions
+    'arrow-up': 'M12 19V5m-7 7l7-7 7 7',
+    'arrow-down': 'M12 5v14m7-7l-7 7-7-7',
+    'arrow-up-right': 'M7 17L17 7M17 7H7M17 7v10',
+    'arrow-down-right': 'M7 7l10 10M17 17V7M17 17H7',
+    'arrow-up-left': 'M17 17L7 7M7 7h10M7 7v10',
+    'arrow-down-left': 'M17 7L7 17M7 17V7M7 17h10',
+    'chevron-up': 'M18 15l-6-6-6 6',
+    'chevron-down': 'M6 9l6 6 6-6',
+    'chevron-left': 'M15 18l-6-6 6-6',
+    'chevron-right': 'M9 18l6-6-6-6',
+    'corner-up-left': 'M9 14L4 9l5-5M20 20v-7a4 4 0 00-4-4H4',
+    'corner-up-right': 'M15 14l5-5-5-5M4 20v-7a4 4 0 014-4h12',
+    'corner-down-left': 'M9 10L4 15l5 5M20 4v7a4 4 0 01-4 4H4',
+    'corner-down-right': 'M15 10l5 5-5 5M4 4v7a4 4 0 004 4h12',
     
-    clock: `<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>`,
-    
-    globe: `<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>`,
-    
-    star: `<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>`,
-    
-    heart: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`,
-    
-    bookmark: `<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>`,
-    
-    refresh: `<polyline points="23,4 23,10 17,10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><polyline points="1,20 1,14 7,14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>`,
-    
-    zap: `<polygon points="13,2 3,14 12,14 11,22 21,10 12,10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="none"/>`
+    // Special app icons
+    'brain': 'M9.5 2A2.5 2.5 0 007 4.5v15A2.5 2.5 0 009.5 22h5a2.5 2.5 0 002.5-2.5v-15A2.5 2.5 0 0014.5 2h-5zM12 6v12',
+    'lightbulb': 'M9 21h6M12 3a6 6 0 00-6 6c0 4 3 7 3 7h6s3-3 3-7a6 6 0 00-6-6z',
+    'feather': 'M20.24 12.24a6 6 0 00-8.49-8.49L5 10.5V19h8.5z',
+    'globe': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zM2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z',
+    'newspaper': 'M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2 2 2 0 01-2-2V6a2 2 0 012-2h2M11 6h9M11 10h9M11 14h9M11 18h9',
+    'bell': 'M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0',
+    'trending': 'M23 6l-9.5 9.5-5-5L1 18M17 6h6v6'
   };
+
+  function getPath(iconName: string): string {
+    return icons[iconName] || icons['help-circle'];
+  }
 </script>
 
 <svg
@@ -59,8 +214,11 @@
   height={size}
   viewBox="0 0 24 24"
   fill="none"
-  class={className}
-  {...$$restProps}
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={finalClassName}
 >
-  {@html icons[name] || icons.x}
+  <path d={getPath(name)} />
 </svg> 

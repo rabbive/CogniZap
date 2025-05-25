@@ -2,6 +2,13 @@
   import '../app.css';
   import ProfessionalHeader from '$lib/components/ProfessionalHeader.svelte';
   import { onMount } from 'svelte';
+  import type { Snippet } from 'svelte';
+
+  interface Props {
+    children: Snippet;
+  }
+
+  let { children }: Props = $props();
 
   onMount(() => {
     // Initialize theme on app load
@@ -18,6 +25,6 @@
   <ProfessionalHeader />
   
   <main class="flex-1">
-    <slot />
+    {@render children()}
   </main>
 </div> 

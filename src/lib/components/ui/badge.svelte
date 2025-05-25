@@ -2,6 +2,7 @@
   import { cn } from "$lib/utils";
   import { type VariantProps, tv } from "tailwind-variants";
   import type { HTMLAttributes } from "svelte/elements";
+  import type { Snippet } from "svelte";
 
   const badgeVariants = tv({
     base: "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -30,22 +31,25 @@
   type Variant = VariantProps<typeof badgeVariants>["variant"];
   type Size = VariantProps<typeof badgeVariants>["size"];
 
-  interface $$Props extends HTMLAttributes<HTMLDivElement> {
+  interface Props extends HTMLAttributes<HTMLDivElement> {
     variant?: Variant;
     size?: Size;
     class?: string;
+    children?: Snippet;
   }
 
-  export let variant: Variant = "default";
-  export let size: Size = "default";
-
-  let className: string = "";
-  export { className as class };
+  let {
+    variant = "default",
+    size = "default",
+    class: className = "",
+    children,
+    ...restProps
+  }: Props = $props();
 </script>
 
 <div
   class={cn(badgeVariants({ variant, size }), className)}
-  {...$$restProps}
+  {...restProps}
 >
-  <slot />
+  {@render children?.()}
 </div> 

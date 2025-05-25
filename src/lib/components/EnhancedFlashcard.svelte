@@ -214,7 +214,7 @@
     transition: transform 0.6s;
   }
   
-  .group:hover .card-body {
+  .group:hover {
     transform: rotateY(2deg);
   }
 </style> 

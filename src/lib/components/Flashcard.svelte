@@ -201,7 +201,7 @@
   .flashcard:focus {
     outline: 2px solid hsl(var(--p));
     outline-offset: 4px;
-    outline-radius: 1rem;
+    border-radius: 1rem;
   }
   
   .flashcard-face {

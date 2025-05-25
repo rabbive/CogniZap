@@ -2,6 +2,7 @@
   import { cn } from "$lib/utils";
   import { type VariantProps, tv } from "tailwind-variants";
   import type { HTMLButtonAttributes } from "svelte/elements";
+  import type { Snippet } from "svelte";
 
   const buttonVariants = tv({
     base: "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -34,31 +35,37 @@
   type Variant = VariantProps<typeof buttonVariants>["variant"];
   type Size = VariantProps<typeof buttonVariants>["size"];
 
-  interface $$Props extends HTMLButtonAttributes {
+  interface Props extends HTMLButtonAttributes {
     variant?: Variant;
     size?: Size;
     loading?: boolean;
     loadingText?: string;
+    disabled?: boolean;
     class?: string;
+    onclick?: ((event: MouseEvent) => void) | undefined;
+    children?: Snippet;
   }
 
-  export let variant: Variant = "default";
-  export let size: Size = "default";
-  export let loading: boolean = false;
-  export let loadingText: string = "Loading...";
-  export let disabled: boolean = false;
+  let {
+    variant = "default",
+    size = "default",
+    loading = false,
+    loadingText = "Loading...",
+    disabled = false,
+    class: className = "",
+    onclick,
+    children,
+    ...restProps
+  }: Props = $props();
 
-  let className: string = "";
-  export { className as class };
-
-  $: isDisabled = disabled || loading;
+  const isDisabled = $derived(disabled || loading);
 </script>
 
 <button
-  class={cn(buttonVariants({ variant, size, className }))}
+  class={cn(buttonVariants({ variant, size }), className)}
   disabled={isDisabled}
-  {...$$restProps}
-  on:click
+  {onclick}
+  {...restProps}
 >
   {#if loading}
     <svg
@@ -83,6 +90,6 @@
     </svg>
     {loadingText}
   {:else}
-    <slot />
+    {@render children?.()}
   {/if}
 </button> 

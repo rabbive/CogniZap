@@ -2,23 +2,28 @@
   import { cn } from "$lib/utils";
   import type { HTMLInputAttributes } from "svelte/elements";
 
-  interface $$Props extends HTMLInputAttributes {
-    class?: string;
+  interface Props extends HTMLInputAttributes {
     error?: string;
     label?: string;
     description?: string;
+    id?: string;
+    type?: string;
     value?: string;
+    class?: string;
+    onkeydown?: ((event: KeyboardEvent) => void) | undefined;
   }
 
-  export let error: string = "";
-  export let label: string = "";
-  export let description: string = "";
-  export let id: string = "";
-  export let type: string = "text";
-  export let value: string = "";
-
-  let className: string = "";
-  export { className as class };
+  let {
+    error = "",
+    label = "",
+    description = "",
+    id = "",
+    type = "text",
+    value = $bindable(""),
+    class: className = "",
+    onkeydown,
+    ...restProps
+  }: Props = $props();
 
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 </script>
@@ -39,7 +44,8 @@
       error && "border-destructive focus-visible:ring-destructive",
       className
     )}
-    {...$$restProps}
+    {onkeydown}
+    {...restProps}
   />
   
   {#if description}

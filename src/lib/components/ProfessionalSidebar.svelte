@@ -5,12 +5,7 @@
   import Button from "$lib/components/ui/Button.svelte";
   import Icon from "$lib/components/ui/Icons.svelte";
 
-  interface $$Props {
-    class?: string;
-  }
-
-  let className: string = "";
-  export { className as class };
+  let className = "";
 
   let stats = [
     { label: "Cards Generated", value: "1,247", icon: "bookmark", change: "+12%" },
@@ -96,11 +91,11 @@
         {#each quickActions as action}
           <button 
             class="w-full justify-start h-auto p-3 hover:bg-muted/50 flex items-center text-left rounded-md transition-colors bg-transparent border-0"
-            on:click={() => window.open(action.href, '_blank')}
+            onclick={() => window.open(action.href, '_blank')}
           >
             <Icon name={action.icon} size={16} className="mr-3 {action.color}" />
             <span class="flex-1 text-left text-sm">{action.label}</span>
-            <Icon name="chevronRight" size={16} className="text-muted-foreground" />
+            <Icon name="chevron-right" size={16} className="text-muted-foreground" />
           </button>
         {/each}
       </div>

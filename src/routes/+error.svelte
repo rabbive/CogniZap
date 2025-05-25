@@ -2,8 +2,8 @@
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   
-  let error = $derived($page.error);
-  let status = $derived($page.status || 500);
+  const error = $derived($page.error);
+  const status = $derived($page.status || 500);
 </script>
 
 <svelte:head>

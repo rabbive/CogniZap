@@ -63,8 +63,20 @@ export const filteredTrendingTopics = derived(
   }
 );
 
+// Enhanced actions interface for type safety
+interface EnhancedActions {
+  updatePreferences: (newPreferences: Partial<StudyPreferences>) => void;
+  addTrendingTopic: (topic: TrendingTopic) => void;
+  addNewsContent: (content: NewsBasedContent) => void;
+  updateAnalytics: (updates: Partial<LearningAnalytics>) => void;
+  trackTopicInteraction: (topic: string) => void;
+  addFactCheckResult: (result: FactCheckResult) => void;
+  updateSources: (sources: Source[]) => void;
+  clearAll: () => void;
+}
+
 // Actions for enhanced features
-export const enhancedActions = {
+export const enhancedActions: EnhancedActions = {
   // Update user preferences
   updatePreferences: (newPreferences: Partial<StudyPreferences>) => {
     userPreferences.update(current => ({ ...current, ...newPreferences }));

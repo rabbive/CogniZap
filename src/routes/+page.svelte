@@ -9,17 +9,17 @@
   import ProfessionalSidebar from '$lib/components/ProfessionalSidebar.svelte';
   import TrendingTopics from '$lib/components/TrendingTopics.svelte';
 
-  let topic = '';
-  let difficulty = 'medium';
-  let cardCount = 10;
-  let includeCurrentEvents = false;
-  let enableFactChecking = false;
-  let includeSources = false;
-  let targetAudience = 'general';
-  let contentFreshness = 'any';
-  let isGenerating = false;
-  let showAdvanced = false;
-  let uploadedFile: File | null = null;
+  let topic = $state('');
+  let difficulty = $state('medium');
+  let cardCount = $state(10);
+  let includeCurrentEvents = $state(false);
+  let enableFactChecking = $state(false);
+  let includeSources = $state(false);
+  let targetAudience = $state('general');
+  let contentFreshness = $state('any');
+  let isGenerating = $state(false);
+  let showAdvanced = $state(false);
+  let uploadedFile = $state<File | null>(null);
 
   let features = [
     {
@@ -123,6 +123,18 @@
     includeSources = true;
     generateContent();
   }
+
+  function getFeatureLink(index: number): string {
+    const links = [
+      '/trending', // Real-Time Trending Topics
+      '/research', // AI Research Assistant
+      '/live-data', // Live Data Learning
+      '/global-events', // Global Events Tracker
+      '/science', // Science Breakthrough Monitor
+      '/competitions' // Learning Competitions
+    ];
+    return links[index] || '/';
+  }
 </script>
 
 <div class="flex min-h-screen bg-background">
@@ -137,7 +149,7 @@
       <section class="text-center py-16 space-y-8">
         <div class="space-y-4">
           <Badge variant="secondary" class="mb-4">
-            <Icon name="sparkles" size={12} className="mr-1" />
+            <Icon name="sparkles" size={12} class="mr-1" />
             Powered by Perplexity Sonar API
           </Badge>
           
@@ -233,8 +245,8 @@
             <!-- Basic Options -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="space-y-2">
-                <label class="text-sm font-medium">Difficulty Level</label>
-                <select bind:value={difficulty} class="w-full p-2 border border-input rounded-md bg-background">
+                <label for="difficulty-select" class="text-sm font-medium">Difficulty Level</label>
+                <select id="difficulty-select" bind:value={difficulty} class="w-full p-2 border border-input rounded-md bg-background">
                   <option value="beginner">Beginner</option>
                   <option value="medium">Intermediate</option>
                   <option value="advanced">Advanced</option>
@@ -243,8 +255,8 @@
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium">Number of Cards</label>
-                <select bind:value={cardCount} class="w-full p-2 border border-input rounded-md bg-background">
+                <label for="cardcount-select" class="text-sm font-medium">Number of Cards</label>
+                <select id="cardcount-select" bind:value={cardCount} class="w-full p-2 border border-input rounded-md bg-background">
                   <option value={5}>5 Cards</option>
                   <option value={10}>10 Cards</option>
                   <option value={15}>15 Cards</option>
@@ -253,8 +265,8 @@
               </div>
 
               <div class="space-y-2">
-                <label class="text-sm font-medium">Target Audience</label>
-                <select bind:value={targetAudience} class="w-full p-2 border border-input rounded-md bg-background">
+                <label for="audience-select" class="text-sm font-medium">Target Audience</label>
+                <select id="audience-select" bind:value={targetAudience} class="w-full p-2 border border-input rounded-md bg-background">
                   <option value="general">General</option>
                   <option value="students">Students</option>
                   <option value="professionals">Professionals</option>
@@ -292,8 +304,8 @@
                     </div>
 
                     <div class="space-y-2">
-                      <label class="text-sm font-medium">Content Freshness</label>
-                      <select bind:value={contentFreshness} class="w-full p-2 border border-input rounded-md bg-background text-sm">
+                      <label for="freshness-select" class="text-sm font-medium">Content Freshness</label>
+                      <select id="freshness-select" bind:value={contentFreshness} class="w-full p-2 border border-input rounded-md bg-background text-sm">
                         <option value="any">Any Time</option>
                         <option value="recent">Recent (Last Month)</option>
                         <option value="latest">Latest (Last Week)</option>
@@ -352,7 +364,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {#each features as feature}
+          {#each features as feature, index}
             <Card class="p-6 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group">
               <div class="space-y-4">
                 <div class="w-12 h-12 rounded-lg {feature.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -364,9 +376,12 @@
                     {feature.description}
                   </p>
                 </div>
-                <button class="hover:bg-accent hover:text-accent-foreground w-full justify-start p-0 h-auto text-primary hover:text-primary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50">
-                  Learn more <Icon name="arrow-right" size={16} className="h-4 w-4 ml-1" />
-                </button>
+                <a 
+                  href={getFeatureLink(index)}
+                  class="hover:bg-accent hover:text-accent-foreground w-full justify-start p-0 h-auto text-primary hover:text-primary/80 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Explore <Icon name="arrow-right" size={16} className="h-4 w-4 ml-1" />
+                </a>
               </div>
             </Card>
           {/each}
