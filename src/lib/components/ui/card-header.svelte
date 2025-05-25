@@ -6,13 +6,12 @@
     class?: string;
   }
 
-  let className: string = "";
-  export { className as class };
+  let { class: className, children, ...restProps }: $$Props = $props();
 </script>
 
 <div
-  class={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)}
-  {...$$restProps}
+  class={cn("flex flex-col space-y-1.5 p-6", className)}
+  {...restProps}
 >
-  <slot />
+  {@render children?.()}
 </div> 
