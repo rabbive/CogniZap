@@ -84,7 +84,7 @@ export const GET: RequestHandler = async ({ url }) => {
         title: source.title,
         publishedDate: new Date(source.publishedDate),
         reliability: source.reliability || 80,
-        domain: new URL(source.url).hostname,
+        domain: source.url && source.url.startsWith('http') ? new URL(source.url).hostname : undefined,
         snippet: source.snippet
       })) || []
     }));

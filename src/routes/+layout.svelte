@@ -1,6 +1,5 @@
 <script lang="ts">
   import '../app.css';
-  import ProfessionalHeader from '$lib/components/ProfessionalHeader.svelte';
   import { onMount } from 'svelte';
   import type { Snippet } from 'svelte';
 
@@ -22,8 +21,6 @@
 </script>
 
 <div class="min-h-screen bg-background text-foreground">
-  <ProfessionalHeader />
-  
   <main class="flex-1">
     {@render children()}
   </main>

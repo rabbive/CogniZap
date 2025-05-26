@@ -84,7 +84,7 @@
         <span>Trending</span>
       </a>
       <a href="/research" class="flex items-center space-x-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-        <Icon name="brain" size={16} />
+        <Icon name="lightbulb" size={16} />
         <span>Research</span>
       </a>
     </nav>
@@ -156,7 +156,7 @@
           <span>Trending</span>
         </a>
         <a href="/research" class="flex items-center space-x-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
-          <Icon name="brain" size={16} />
+          <Icon name="lightbulb" size={16} />
           <span>Research</span>
         </a>
         

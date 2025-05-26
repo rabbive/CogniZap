@@ -1,68 +1,28 @@
-# CogniZap 🧠⚡
+# CogniZap - AI-Powered Learning Platform
 
-**AI-Powered Learning Platform with Real-Time Intelligence**
+CogniZap is an intelligent learning platform that generates flashcards and quizzes from trending topics, current events, and real-time data using AI.
 
-CogniZap is a cutting-edge educational platform that leverages the Perplexity Sonar API to generate intelligent flashcards, quizzes, and learning materials from trending topics, current events, and real-time data. Built with SvelteKit 5, TypeScript, and a professional shadcn/ui design system.
+## Features
 
-![CogniZap Hero](https://via.placeholder.com/800x400/3B82F6/FFFFFF?text=CogniZap+Professional+UI)
+- 🧠 **AI-Powered Content Generation** - Create flashcards and quizzes using advanced AI
+- 📈 **Real-Time Trending Topics** - Stay updated with current events and trending subjects
+- 🔬 **Research Assistant** - Multi-perspective analysis with academic and industry insights
+- 📊 **Live Data Learning** - Real-time market data, weather, sports, and economic insights
+- 🌍 **Global Events Tracker** - Worldwide events with educational context
+- 🔬 **Science Breakthrough Monitor** - Latest research findings and discoveries
+- 🏆 **Learning Competitions** - Competitive learning with leaderboards
 
-## ✨ Key Features
+## Prerequisites
 
-### 🎯 Core Learning Features
-- **Smart Flashcard Generation**: AI-powered flashcards from any topic
-- **Interactive Quizzes**: Dynamic quiz generation with multiple difficulty levels
-- **File Upload Support**: Extract content from PDF and PowerPoint files
-- **Real-Time Content**: Generate materials from trending topics and current events
-
-### 🚀 Advanced AI Capabilities
-- **Trending Topics Integration**: Live trending topic analysis and content generation
-- **Research Assistant**: Multi-perspective analysis with academic and industry insights
-- **Live Data Learning**: Real-time market data, weather, sports, and economic insights
-- **Global Events Tracker**: Worldwide events with educational context
-- **Science Breakthrough Monitor**: Latest research findings and discoveries
-- **Learning Competitions**: Competitive learning with real-time leaderboards
-- **Viral Content Analysis**: Educational value assessment of trending content
-
-### 🎨 Professional UI/UX
-- **Modern Design System**: Built with shadcn/ui components and Tailwind CSS
-- **Dark/Light Mode**: Seamless theme switching with system preference detection
-- **Responsive Layout**: Optimized for desktop, tablet, and mobile devices
-- **Professional Header**: Navigation, search, notifications, and user controls
-- **Interactive Sidebar**: Quick stats, feature navigation, and recent activity
-- **Glass Morphism Effects**: Modern visual aesthetics with backdrop blur
-- **Smooth Animations**: Fade-in, slide-in, and hover effects
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **SvelteKit 5**: Modern web framework with runes mode
-- **TypeScript**: Type-safe development
-- **Tailwind CSS**: Utility-first CSS framework
-- **shadcn/ui**: Professional component library
-- **Lucide Icons**: Beautiful icon system
-
-### Backend & APIs
-- **Perplexity Sonar API**: Real-time web search and content generation
-- **SvelteKit Server Routes**: API endpoints and server-side logic
-- **File Processing**: PDF and PowerPoint text extraction
-
-### Development Tools
-- **Vite**: Fast build tool and development server
-- **ESLint & Prettier**: Code formatting and linting
-- **PostCSS**: CSS processing and optimization
-
-## 🚀 Quick Start
-
-### Prerequisites
 - Node.js 18+ and npm
-- Perplexity API key
+- Perplexity API key (for AI-powered content generation)
 
-### Installation
+## Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/cognizap.git
-   cd cognizap
+   git clone <repository-url>
+   cd CogniZap
    ```
 
 2. **Install dependencies**
@@ -70,260 +30,122 @@ CogniZap is a cutting-edge educational platform that leverages the Perplexity So
    npm install
    ```
 
-3. **Environment setup**
-   ```bash
-   cp .env.example .env
-   # Add your Perplexity API key to .env
-   PERPLEXITY_API_KEY=your_api_key_here
+3. **Environment Configuration**
+   
+   Create a `.env` file in the project root:
+   ```env
+   # Perplexity API Configuration
+   PERPLEXITY_API_KEY=your_actual_api_key_here
+   
+   # Application Configuration
+   PUBLIC_APP_NAME=CogniZap
+   PUBLIC_APP_VERSION=1.0.0
    ```
 
-4. **Start development server**
+   **Getting a Perplexity API Key:**
+   - Visit [Perplexity AI API](https://docs.perplexity.ai)
+   - Sign up for an account
+   - Generate an API key from your dashboard
+   - Replace `your_actual_api_key_here` with your actual key
+
+4. **Start the development server**
    ```bash
    npm run dev
    ```
 
 5. **Open your browser**
+   
    Navigate to `http://localhost:5173`
 
-## 📚 API Documentation
+## Demo Mode
 
-### Core Generation API
+If you don't have a Perplexity API key yet, the application will automatically fall back to demo content for testing purposes.
 
-#### POST `/api/generate`
-Generate flashcards or quizzes from topics or uploaded content.
+## Available Scripts
 
-**Request Body:**
-```typescript
-{
-  topic: string;
-  difficulty: 'beginner' | 'medium' | 'advanced' | 'expert';
-  cardCount: number;
-  includeCurrentEvents: boolean;
-  enableFactChecking: boolean;
-  includeSources: boolean;
-  targetAudience: 'general' | 'students' | 'professionals' | 'researchers';
-  contentFreshness: 'any' | 'recent' | 'latest' | 'today';
-}
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run check` - Run TypeScript checks
+- `npm run lint` - Lint code
+- `npm run format` - Format code with Prettier
+
+## Tech Stack
+
+- **Frontend**: SvelteKit with Svelte 5
+- **Styling**: Tailwind CSS
+- **Language**: TypeScript
+- **AI Integration**: Perplexity Sonar API
+- **Icons**: Lucide Svelte
+- **Deployment**: Vercel (configured)
+
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/
+│   │   ├── ui/           # Reusable UI components
+│   │   └── ...           # Feature-specific components
+│   ├── stores/           # Svelte stores for state management
+│   ├── types.ts          # TypeScript type definitions
+│   └── utils.ts          # Utility functions
+├── routes/
+│   ├── api/              # API endpoints
+│   ├── auth/             # Authentication pages
+│   ├── dashboard/        # Dashboard and specialized tools
+│   └── ...               # Other pages
+└── app.html              # HTML template
 ```
 
-**Response:**
-```typescript
-{
-  success: boolean;
-  data: Flashcard[] | Quiz;
-  sources?: Source[];
-  factCheckResults?: FactCheckResult[];
-  metadata: GenerationMetadata;
-}
-```
+## Key Features
 
-### Advanced Features APIs
+### 1. Content Generation
+- Upload PDFs or PowerPoint files for content extraction
+- Generate flashcards or quiz questions
+- Adjustable difficulty levels and content count
+- Real-time fact-checking and source citations
 
-#### GET `/api/trending`
-Fetch real-time trending topics with educational relevance.
+### 2. Specialized Learning Tools
+- **Trending Topics**: Real-time trending content generation
+- **Research Assistant**: Multi-perspective analysis
+- **Live Data Learning**: Real-time data integration
+- **Global Events**: Worldwide events tracking
+- **Science Tracker**: Latest research findings
+- **Learning Competitions**: Gamified learning experiences
 
-#### POST `/api/research-assistant`
-Multi-perspective analysis with academic and industry insights.
+### 3. Authentication
+- Simple email/password authentication
+- Demo mode for testing
+- Persistent user sessions
 
-#### POST `/api/live-data-learning`
-Real-time data integration for stocks, weather, sports, and economics.
+## API Endpoints
 
-#### POST `/api/global-events`
-Global event tracking with educational context.
+- `POST /api/generate` - Generate flashcards or quiz content
+- `POST /api/upload` - Handle file uploads (PDF/PowerPoint)
+- `GET /api/trending` - Fetch trending topics
+- `GET /api/global-events` - Get global events data
+- `GET /api/research-assistant` - Research analysis endpoint
+- And more specialized endpoints for each tool
 
-#### POST `/api/science-tracker`
-Latest scientific research and breakthrough monitoring.
+## Contributing
 
-#### POST `/api/learning-competitions`
-Competitive learning features with leaderboards.
-
-#### POST `/api/viral-analysis`
-Viral content analysis for educational value.
-
-## 🎨 UI Components
-
-### Core Components
-- **Button**: Multiple variants (default, outline, ghost, destructive)
-- **Card**: Flexible container with header, content, and footer
-- **Input**: Form input with labels, descriptions, and error states
-- **Badge**: Status indicators with multiple variants
-- **Loading**: Spinner component with different sizes and variants
-- **Toast**: Notification system with auto-dismiss
-
-### Layout Components
-- **ProfessionalHeader**: Navigation, search, notifications, theme toggle
-- **ProfessionalSidebar**: Quick stats, feature navigation, recent activity
-- **TrendingTopics**: Real-time trending topics display
-- **EnhancedFlashcard**: Flashcards with source citations and fact-checking
-
-### Usage Example
-```svelte
-<script>
-  import Button from '$lib/components/ui/Button.svelte';
-  import Card from '$lib/components/ui/Card.svelte';
-  import Badge from '$lib/components/ui/badge.svelte';
-</script>
-
-<Card class="p-6">
-  <div class="space-y-4">
-    <Badge variant="success">Active</Badge>
-    <h2 class="text-xl font-semibold">Professional UI</h2>
-    <p class="text-muted-foreground">Built with shadcn/ui components</p>
-    <Button variant="default" size="lg">Get Started</Button>
-  </div>
-</Card>
-```
-
-## 🔧 Configuration
-
-### Theme Configuration
-The app supports automatic theme detection and manual switching:
-
-```typescript
-// Theme initialization in +layout.svelte
-onMount(() => {
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-    document.documentElement.classList.add('dark');
-  }
-});
-```
-
-### Tailwind Configuration
-Custom design system with CSS variables:
-
-```javascript
-// tailwind.config.js
-export default {
-  darkMode: ["class"],
-  theme: {
-    extend: {
-      colors: {
-        border: "hsl(var(--border) / <alpha-value>)",
-        background: "hsl(var(--background) / <alpha-value>)",
-        primary: {
-          DEFAULT: "hsl(var(--primary) / <alpha-value>)",
-          foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
-        }
-        // ... more colors
-      }
-    }
-  }
-}
-```
-
-## 🧪 Testing
-
-### API Testing
-```bash
-# Test core generation API
-node test-api.js
-
-# Test enhanced features
-node test-enhanced-features.js
-
-# Test advanced features
-node test-advanced-features.js
-
-# Test file upload
-node test-upload.js
-```
-
-### Component Testing
-```bash
-# Run type checking
-npm run check
-
-# Run linting
-npm run lint
-
-# Format code
-npm run format
-```
-
-## 📈 Performance Features
-
-### Optimization Techniques
-- **Code Splitting**: Automatic route-based code splitting
-- **Image Optimization**: Responsive images with lazy loading
-- **CSS Optimization**: Purged unused styles and minification
-- **Bundle Analysis**: Optimized bundle sizes
-
-### Caching Strategy
-- **API Response Caching**: Intelligent caching for trending topics
-- **Static Asset Caching**: Long-term caching for static resources
-- **Service Worker**: Offline functionality (coming soon)
-
-## 🔒 Security Features
-
-### Data Protection
-- **Input Sanitization**: XSS protection for user inputs
-- **API Rate Limiting**: Protection against abuse
-- **CORS Configuration**: Secure cross-origin requests
-- **Environment Variables**: Secure API key management
-
-## 🌐 Deployment
-
-### Vercel Deployment (Recommended)
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel --prod
-```
-
-### Environment Variables
-```bash
-PERPLEXITY_API_KEY=your_api_key_here
-NODE_ENV=production
-```
-
-### Build for Production
-```bash
-npm run build
-npm run preview
-```
-
-## 🤝 Contributing
-
-### Development Workflow
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes following the coding standards
-4. Run tests: `npm run check && npm run lint`
-5. Commit your changes: `git commit -m 'Add amazing feature'`
-6. Push to the branch: `git push origin feature/amazing-feature`
-7. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### Coding Standards
-- Use TypeScript for type safety
-- Follow Svelte 5 runes mode patterns
-- Use shadcn/ui components for consistency
-- Write descriptive commit messages
-- Add JSDoc comments for complex functions
+## License
 
-## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Support
 
-## 🙏 Acknowledgments
+If you encounter any issues or have questions:
+1. Check the demo mode works without API keys
+2. Verify your Perplexity API key is valid
+3. Ensure all dependencies are installed correctly
+4. Check the browser console for any error messages
 
-- **Perplexity AI** for the powerful Sonar API
-- **Svelte Team** for the amazing framework
-- **shadcn** for the beautiful UI components
-- **Tailwind CSS** for the utility-first approach
-- **Lucide** for the icon system
-
-## 📞 Support
-
-- **Documentation**: [GitHub Wiki](https://github.com/yourusername/cognizap/wiki)
-- **Issues**: [GitHub Issues](https://github.com/yourusername/cognizap/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/cognizap/discussions)
-- **Email**: support@cognizap.com
-
----
-
-**Built with ❤️ using SvelteKit, TypeScript, and the Perplexity Sonar API**
+For additional support, please open an issue in the repository.

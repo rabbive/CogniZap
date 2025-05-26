@@ -1,26 +1,41 @@
 <script lang="ts">
   import { cn } from "$lib/utils";
+  import { goto } from '$app/navigation';
+  import { onMount } from 'svelte';
   import Card from "$lib/components/ui/Card.svelte";
   import Badge from "$lib/components/ui/badge.svelte";
   import Button from "$lib/components/ui/Button.svelte";
   import Icon from "$lib/components/ui/Icons.svelte";
 
-  let className = "";
+  interface Props {
+    class?: string;
+  }
+
+  let { class: className = "" }: Props = $props();
+  let user = $state<{name: string, email: string} | null>(null);
+
+  onMount(() => {
+    const userData = localStorage.getItem('cogniZapUser');
+    if (userData) {
+      user = JSON.parse(userData);
+    }
+  });
 
   let stats = [
     { label: "Cards Generated", value: "1,247", icon: "bookmark", change: "+12%" },
-    { label: "Topics Learned", value: "89", icon: "brain", change: "+5%" },
+    { label: "Topics Learned", value: "89", icon: "graduation-cap", change: "+5%" },
     { label: "Study Streak", value: "15 days", icon: "star", change: "New!" },
     { label: "Accuracy Rate", value: "94%", icon: "heart", change: "+2%" }
   ];
 
   let quickActions = [
-    { label: "Trending Topics", icon: "trending", href: "/api/trending", color: "text-blue-500" },
-    { label: "Research Assistant", icon: "brain", href: "/api/research-assistant", color: "text-purple-500" },
-    { label: "Live Data Learning", icon: "activity", href: "/api/live-data-learning", color: "text-green-500" },
-    { label: "Global Events", icon: "globe", href: "/api/global-events", color: "text-orange-500" },
-    { label: "Science Tracker", icon: "search", href: "/api/science-tracker", color: "text-cyan-500" },
-    { label: "Learning Competitions", icon: "star", href: "/api/learning-competitions", color: "text-yellow-500" }
+    { label: "Dashboard", icon: "layout-dashboard", href: "/dashboard", color: "text-blue-500" },
+    { label: "Trending Topics", icon: "trending", href: "/dashboard/trending", color: "text-blue-500" },
+    { label: "Research Assistant", icon: "lightbulb", href: "/dashboard/research", color: "text-purple-500" },
+    { label: "Live Data Learning", icon: "activity", href: "/dashboard/live-data", color: "text-green-500" },
+    { label: "Global Events", icon: "globe", href: "/dashboard/global-events", color: "text-orange-500" },
+    { label: "Science Tracker", icon: "search", href: "/dashboard/science", color: "text-cyan-500" },
+    { label: "Learning Competitions", icon: "star", href: "/dashboard/competitions", color: "text-yellow-500" }
   ];
 
   let recentActivity = [
@@ -42,7 +57,7 @@
       type: "research", 
       title: "Completed research on Quantum Computing", 
       time: "1 hour ago",
-      icon: "brain",
+      icon: "lightbulb",
       color: "text-purple-500"
     },
     { 
@@ -53,10 +68,67 @@
       color: "text-yellow-500"
     }
   ];
+
+  function navigateTo(href: string) {
+    goto(href);
+  }
+
+  function logout() {
+    localStorage.removeItem('cogniZapAuth');
+    localStorage.removeItem('cogniZapUser');
+    goto('/');
+  }
 </script>
 
 <aside class={cn("w-80 h-full bg-background border-r overflow-y-auto scrollbar-thin", className)}>
   <div class="p-6 space-y-6">
+    
+    <!-- Header with Logo and User -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2 pb-4 border-b">
+        <Icon name="zap" size={24} className="text-primary" />
+        <span class="text-xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+          CogniZap
+        </span>
+      </div>
+      
+      {#if user}
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+            <Icon name="user" size={20} className="text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium truncate">{user.name}</p>
+            <p class="text-xs text-muted-foreground truncate">{user.email}</p>
+          </div>
+          <Button variant="ghost" size="sm" onclick={logout}>
+            <Icon name="log-out" size={16} />
+          </Button>
+        </div>
+      {/if}
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="space-y-4">
+      <h3 class="text-lg font-semibold flex items-center gap-2">
+        <Icon name="zap" size={20} className="text-primary" />
+        Navigation
+      </h3>
+      
+      <div class="space-y-2">
+        {#each quickActions as action}
+          <button 
+            class="w-full justify-start h-auto p-3 hover:bg-muted/50 flex items-center text-left rounded-md transition-colors bg-transparent border-0"
+            onclick={() => navigateTo(action.href)}
+          >
+            <Icon name={action.icon} size={16} className="mr-3 {action.color}" />
+            <span class="flex-1 text-left text-sm">{action.label}</span>
+            <Icon name="chevron-right" size={16} className="text-muted-foreground" />
+          </button>
+        {/each}
+      </div>
+    </div>
+
     <!-- Quick Stats -->
     <div class="space-y-4">
       <h3 class="text-lg font-semibold flex items-center gap-2">
@@ -76,27 +148,6 @@
               <p class="text-xs text-muted-foreground">{stat.label}</p>
             </div>
           </Card>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="space-y-4">
-      <h3 class="text-lg font-semibold flex items-center gap-2">
-        <Icon name="zap" size={20} className="text-primary" />
-        Quick Actions
-      </h3>
-      
-      <div class="space-y-2">
-        {#each quickActions as action}
-          <button 
-            class="w-full justify-start h-auto p-3 hover:bg-muted/50 flex items-center text-left rounded-md transition-colors bg-transparent border-0"
-            onclick={() => window.open(action.href, '_blank')}
-          >
-            <Icon name={action.icon} size={16} className="mr-3 {action.color}" />
-            <span class="flex-1 text-left text-sm">{action.label}</span>
-            <Icon name="chevron-right" size={16} className="text-muted-foreground" />
-          </button>
         {/each}
       </div>
     </div>
