@@ -90,27 +90,37 @@ async function extractTextFromPDF(file: File): Promise<string> {
   try {
     const pdfjsLib = await import('pdfjs-dist');
     
-    // Set worker path for server-side processing
+    // Set worker path for PDF.js
     if (typeof window === 'undefined') {
-      const path = await import('path');
-      const fs = await import('fs');
-      const workerPath = path.resolve('./static/pdf.worker.min.js');
-      
-      if (fs.existsSync(workerPath)) {
-        pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
-      } else {
-        // Fallback to CDN worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-      }
+      pdfjsLib.GlobalWorkerOptions.workerSrc = `file://${process.cwd()}/static/pdf.worker.min.js`;
+    } else {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
     }
 
+    // Convert File to ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
-    const loadingTask = pdfjsLib.getDocument({ 
-      data: arrayBuffer,
+    const uint8Array = new Uint8Array(arrayBuffer);
+
+    console.log(`📄 Starting PDF processing for ${file.name} (${uint8Array.length} bytes)`);
+
+    const loadingTask = pdfjsLib.getDocument({
+      data: uint8Array,
       useSystemFonts: true,
-      standardFontDataUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/standard_fonts/'
+      isEvalSupported: true,
+      useWorkerFetch: true,
+      standardFontDataUrl: '/standard_fonts/',
+      cMapUrl: '/cmaps-minimal/',
+      cMapPacked: true,
+      disableFontFace: true,
+      verbosity: 1
     });
-    
+
+    // Add error handler for the loading task
+    loadingTask.onPassword = (updatePassword: (password: string) => void, reason: number) => {
+      console.warn('PDF is password protected:', reason);
+      throw new Error('PDF is password protected');
+    };
+
     const pdf = await loadingTask.promise;
     let fullText = '';
     
@@ -119,25 +129,32 @@ async function extractTextFromPDF(file: File): Promise<string> {
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       try {
         const page = await pdf.getPage(pageNum);
+        
+        // Get text content
         const textContent = await page.getTextContent();
         
+        // Process text content with better formatting
         const pageText = textContent.items
           .map((item: any) => {
-            // Handle different text item types
-            if (item.str && item.str.trim()) {
-              return item.str;
+            if (typeof item.str === 'string' && item.str.trim()) {
+              // Handle different text item types and preserve formatting
+              const text = item.str.trim();
+              // Add newline for items that appear to be headers or separate paragraphs
+              const fontSize = item.transform ? Math.sqrt(item.transform[0] * item.transform[0] + item.transform[1] * item.transform[1]) : 0;
+              return fontSize >= 12 ? `\n${text}\n` : `${text} `;
             }
             return '';
           })
-          .filter(text => text.length > 0)
-          .join(' ');
+          .join('')
+          .replace(/\s+/g, ' ')  // Normalize whitespace
+          .trim();
         
-        if (pageText.trim()) {
+        if (pageText) {
           fullText += `\n--- Page ${pageNum} ---\n${pageText}\n`;
         }
         
         // Clean up page resources
-        page.cleanup();
+        await page.cleanup();
       } catch (pageError) {
         console.warn(`Warning: Could not process page ${pageNum}:`, pageError);
         fullText += `\n--- Page ${pageNum} (processing error) ---\n`;
@@ -145,13 +162,36 @@ async function extractTextFromPDF(file: File): Promise<string> {
     }
     
     // Clean up PDF resources
-    pdf.destroy();
+    await pdf.destroy();
     
-    return fullText.trim();
+    // Verify extracted content
+    if (!fullText.trim()) {
+      console.error('No text content extracted from PDF');
+      throw new Error('No readable text content found in the PDF file');
+    }
+    
+    // Clean up the extracted text
+    fullText = fullText
+      .replace(/\n{3,}/g, '\n\n')  // Remove excessive newlines
+      .replace(/[^\S\n]+/g, ' ')    // Normalize spaces but keep newlines
+      .trim();
+    
+    console.log(`✅ Successfully extracted ${fullText.length} characters from PDF`);
+    return fullText;
     
   } catch (error) {
     console.error('PDF extraction error:', error);
-    throw new Error(`PDF processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      if (error.message.includes('password')) {
+        throw new Error('The PDF file is password protected. Please provide an unprotected file.');
+      } else if (error.message.includes('corrupted') || error.message.includes('invalid')) {
+        throw new Error('The PDF file appears to be corrupted. Please try a different file.');
+      } else if (error.message.includes('text content')) {
+        throw new Error('No readable text found in the PDF. The file might be scanned or contain only images.');
+      }
+    }
+    throw new Error(`Failed to process PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 

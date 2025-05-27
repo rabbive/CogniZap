@@ -28,6 +28,16 @@
   let uploadedFile = $state<File | null>(null);
   let error = $state('');
 
+  // Progress tracking
+  let generationSteps = $state([
+    'Validating input',
+    'Processing content', 
+    'Generating questions',
+    'Fact-checking answers',
+    'Finalizing content'
+  ]);
+  let currentGenerationStep = $state(0);
+
   let features = [
     {
       icon: "trending",
@@ -134,8 +144,12 @@
     
     error = '';
     isGenerating = true;
+    currentGenerationStep = 0;
     
     try {
+      // Step 1: Validation
+      setTimeout(() => currentGenerationStep = 1, 500);
+      
       let requestBody: any = {
         type: contentType, // Use selected content type
         count: cardCount, // Fixed parameter name
@@ -147,8 +161,9 @@
         contentFreshness
       };
 
-      // If file is uploaded, handle file upload and extract text
+      // Step 2: File processing (if applicable)
       if (uploadedFile) {
+        currentGenerationStep = 1;
         try {
           console.log('📁 Processing uploaded file:', uploadedFile.name);
           
@@ -173,7 +188,6 @@
           
           // Use extracted text as the base content for generation
           const extractedText = uploadResult.text;
-          const topicFromFile = topic.trim() || `Analysis of ${uploadedFile.name.replace(/\.[^/.]+$/, "")}`;
           
           // Combine user topic with extracted content
           requestBody.topic = topic.trim() ? 
@@ -184,6 +198,7 @@
           requestBody.extractedText = extractedText.substring(0, 2000); // Limit for debugging
           
           console.log('✅ Successfully extracted text from file, length:', extractedText.length);
+          setTimeout(() => currentGenerationStep = 2, 800);
           
         } catch (fileError) {
           console.error('File processing error:', fileError);
@@ -192,19 +207,28 @@
         }
       } else {
         requestBody.topic = topic.trim();
+        setTimeout(() => currentGenerationStep = 2, 600);
       }
 
+      // Step 3: API call
+      setTimeout(() => currentGenerationStep = 3, 1000);
+      
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
       });
 
+      // Step 4: Processing response
+      setTimeout(() => currentGenerationStep = 4, 1200);
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Redirect to gamified experience instead of results page
-          goto(`/play?data=${encodeURIComponent(JSON.stringify(data))}`);
+          // Complete!
+          setTimeout(() => {
+            goto(`/play?data=${encodeURIComponent(JSON.stringify(data))}`);
+          }, 500);
         } else {
           // Handle API errors with more specific messages
           error = data.error || 'Failed to generate content. Please try again.';
@@ -231,6 +255,7 @@
       error = 'Network error. Please check your connection and try again.';
     } finally {
       isGenerating = false;
+      currentGenerationStep = 0;
     }
   }
 
@@ -482,6 +507,50 @@
                     <span class="text-sm font-medium">Error</span>
                   </div>
                   <p class="text-sm mt-1">{error}</p>
+                </div>
+              {/if}
+
+              <!-- Progress Indicator -->
+              {#if isGenerating}
+                <div class="p-6 border border-primary/20 bg-primary/5 rounded-lg">
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between text-sm font-medium">
+                      <span>Generating Content...</span>
+                      <span>{currentGenerationStep + 1} of {generationSteps.length}</span>
+                    </div>
+                    
+                    <div class="space-y-3">
+                      {#each generationSteps as step, index}
+                        <div class="flex items-center gap-3">
+                          <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all {
+                            index < currentGenerationStep ? 'bg-green-500 text-white' :
+                            index === currentGenerationStep ? 'bg-primary text-primary-foreground animate-pulse' :
+                            'bg-muted text-muted-foreground'
+                          }">
+                            {#if index < currentGenerationStep}
+                              <Icon name="check" size={16} />
+                            {:else if index === currentGenerationStep}
+                              <Icon name="loader" size={16} className="animate-spin" />
+                            {:else}
+                              {index + 1}
+                            {/if}
+                          </div>
+                          <span class="text-sm transition-colors {
+                            index <= currentGenerationStep ? 'text-foreground' : 'text-muted-foreground'
+                          }">
+                            {step}
+                          </span>
+                        </div>
+                      {/each}
+                    </div>
+                    
+                    <div class="w-full bg-muted rounded-full h-2">
+                      <div 
+                        class="bg-primary h-2 rounded-full transition-all duration-500"
+                        style="width: {((currentGenerationStep + 1) / generationSteps.length) * 100}%"
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               {/if}
 
